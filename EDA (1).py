@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+
 """
 Air Quality Dataset EDA - Complete Analysis
 Dataset: city_day.csv (Air Quality Data in India)
@@ -29,7 +29,7 @@ print("="*80)
 # Load the data
 df = pd.read_csv('city_day.csv')
 
-print(f"\n✅ Dataset loaded successfully!")
+print(f"\n Dataset loaded successfully!")
 print(f"   Shape: {df.shape}")
 print(f"   Rows: {df.shape[0]:,}")
 print(f"   Columns: {df.shape[1]}")
@@ -129,7 +129,7 @@ for start, end, phase in lockdown_dates:
 df['Is_Lockdown'] = (df['Lockdown_Phase'] != 'No Lockdown').astype(int)
 df['Is_COVID_Year'] = (df['Year'] == 2020).astype(int)
 
-print("\n✅ Data preprocessing completed!")
+print("\n Data preprocessing completed!")
 print(f"   Added: Year, Month, Season, DayOfWeek, Festival flags, Lockdown flags")
 
 # ============================================================================
@@ -148,20 +148,20 @@ missing_df = pd.DataFrame({
     'Percentage': missing_percentage
 }).sort_values('Percentage', ascending=False)
 
-print("\n📊 Missing Values Analysis:")
+print("\n Missing Values Analysis:")
 print(missing_df[missing_df['Missing_Count'] > 0].head(10))
 
 # Data types
-print("\n📊 Data Types:")
+print("\n Data Types:")
 print(df.dtypes.value_counts())
 
 # Summary statistics for key pollutants
 key_pollutants = ['PM2.5', 'PM10', 'NO2', 'CO', 'SO2', 'O3', 'AQI']
-print("\n📊 Summary Statistics for Key Pollutants:")
+print("\n Summary Statistics for Key Pollutants:")
 print(df[key_pollutants].describe().round(2))
 
 # AQI distribution
-print("\n📊 AQI Category Distribution:")
+print("\n AQI Category Distribution:")
 aqi_dist = df['AQI_Bucket'].value_counts()
 aqi_perc = df['AQI_Bucket'].value_counts(normalize=True) * 100
 aqi_summary = pd.DataFrame({
@@ -170,15 +170,6 @@ aqi_summary = pd.DataFrame({
 })
 print(aqi_summary)
 
-# ============================================================================
-# 3. VISUALIZATION SETUP
-# ============================================================================
-
-# Create output directory for saving plots
-import os
-if not os.path.exists('air_quality_analysis_output'):
-    os.makedirs('air_quality_analysis_output')
-    print("\n✅ Created output directory: 'air_quality_analysis_output'")
 
 # ============================================================================
 # 4. SEASONAL VARIATION ANALYSIS
@@ -258,7 +249,6 @@ ax6.set_title('Data Distribution by Season', fontsize=14, fontweight='bold')
 plt.tight_layout()
 plt.savefig('air_quality_analysis_output/seasonal_variation.png', dpi=150, bbox_inches='tight')
 plt.show()
-print("✅ Saved: seasonal_variation.png")
 
 # ============================================================================
 # 5. CITY COMPARISONS
@@ -271,7 +261,7 @@ print("="*80)
 # Average AQI by city
 city_avg_aqi = df.groupby('City')['AQI'].agg(['mean', 'median', 'std', 'min', 'max', 'count']).round(2)
 city_avg_aqi = city_avg_aqi.sort_values('mean', ascending=False)
-print("\n📊 City-wise AQI Statistics:")
+print("\n City-wise AQI Statistics:")
 print(city_avg_aqi)
 
 fig, axes = plt.subplots(2, 3, figsize=(18, 12))
@@ -358,7 +348,6 @@ for j in range(len(cities), 6):
 plt.tight_layout()
 plt.savefig('air_quality_analysis_output/city_aqi_categories.png', dpi=150, bbox_inches='tight')
 plt.show()
-print("✅ Saved: city_comparison_*.png")
 
 # ============================================================================
 # 6. YEARLY COMPARISON AND TRENDS
@@ -375,7 +364,7 @@ yearly_stats = df.groupby('Year').agg({
     'NO2': 'mean',
     'City': 'count'
 }).round(2)
-print("\n📊 Yearly Statistics:")
+print("\n Yearly Statistics:")
 print(yearly_stats)
 
 fig, axes = plt.subplots(2, 3, figsize=(18, 12))
@@ -449,7 +438,6 @@ ax6.set_xticks(yearly_count.index)
 plt.tight_layout()
 plt.savefig('air_quality_analysis_output/yearly_trends.png', dpi=150, bbox_inches='tight')
 plt.show()
-print("✅ Saved: yearly_trends.png")
 
 # ============================================================================
 # 7. FESTIVAL INFLUENCE ANALYSIS
@@ -480,7 +468,7 @@ for col, name in zip(festival_cols, festival_names):
         })
 
 festival_df = pd.DataFrame(festival_stats).round(2)
-print("\n📊 Festival Impact on Air Quality (All Cities):")
+print("\n Festival Impact on Air Quality (All Cities):")
 print(festival_df)
 
 # Diwali impact by city
@@ -489,7 +477,7 @@ diwali_impact = df[df['Is_Diwali'] == 1].groupby('City').agg({
     'PM2.5': 'mean',
     'PM10': 'mean'
 }).round(2)
-print("\n📊 Diwali Day AQI by City:")
+print("\n Diwali Day AQI by City:")
 print(diwali_impact)
 
 # Visualization: Festival Impact
@@ -539,7 +527,7 @@ for i, (year, value) in enumerate(diwali_yearly.items()):
 plt.tight_layout()
 plt.savefig('air_quality_analysis_output/diwali_trend.png', dpi=150, bbox_inches='tight')
 plt.show()
-print("✅ Saved: festival_impact.png, diwali_trend.png")
+
 
 # ============================================================================
 # 8. LOCKDOWN EFFECTS ANALYSIS (COVID-19)
@@ -573,7 +561,7 @@ lockdown_stats = {
 lockdown_df = pd.DataFrame(lockdown_stats)
 lockdown_df['Change_%'] = ((lockdown_df['2020_Avg'] - lockdown_df['Pre_Lockdown_Avg']) 
                           / lockdown_df['Pre_Lockdown_Avg'] * 100).round(2)
-print("\n📊 COVID-19 Year Impact (2020 vs Previous Years):")
+print("\n COVID-19 Year Impact (2020 vs Previous Years):")
 print(lockdown_df)
 
 # Lockdown phases analysis
@@ -584,7 +572,7 @@ lockdown_phase_stats = df[df['Is_Lockdown'] == 1].groupby('Lockdown_Phase').agg(
     'NO2': 'mean',
     'CO': 'mean'
 }).round(2)
-print("\n📊 Air Quality During Different Lockdown Phases:")
+print("\n Air Quality During Different Lockdown Phases:")
 print(lockdown_phase_stats)
 
 # City-wise lockdown impact
@@ -593,7 +581,7 @@ city_lockdown = df[df['Year'] == 2020].groupby('City').agg({
     'PM2.5': 'mean',
     'Lockdown_Phase': lambda x: (x != 'No Lockdown').sum()
 }).round(2)
-print("\n📊 City-wise Average AQI in 2020:")
+print("\n City-wise Average AQI in 2020:")
 print(city_lockdown.sort_values('AQI', ascending=False))
 
 # Visualization: Lockdown Effect
@@ -697,7 +685,6 @@ ax6.tick_params(axis='x', rotation=45)
 plt.tight_layout()
 plt.savefig('air_quality_analysis_output/lockdown_effects.png', dpi=150, bbox_inches='tight')
 plt.show()
-print("✅ Saved: lockdown_effects.png")
 
 # ============================================================================
 # 9. CORRELATION ANALYSIS AND HEATMAPS
@@ -712,7 +699,7 @@ numeric_cols = ['PM2.5', 'PM10', 'NO', 'NO2', 'NOx', 'NH3', 'CO', 'SO2', 'O3',
                 'Benzene', 'Toluene', 'Xylene', 'AQI']
 corr_matrix = df[numeric_cols].corr()
 
-print("\n📊 Top 5 Correlations with AQI:")
+print("\n Top 5 Correlations with AQI:")
 aqi_corr = corr_matrix['AQI'].sort_values(ascending=False)
 print(aqi_corr[1:6])  # Skip AQI itself
 
@@ -778,7 +765,6 @@ plt.colorbar(scatter, ax=ax6, label='AQI Category')
 plt.tight_layout()
 plt.savefig('air_quality_analysis_output/correlation_analysis.png', dpi=150, bbox_inches='tight')
 plt.show()
-print("✅ Saved: correlation_analysis.png")
 
 # ============================================================================
 # 10. WEEKDAY/WEEKEND PATTERNS
@@ -797,7 +783,6 @@ weekday_stats = df.groupby('Is_Weekend').agg({
     'CO': 'mean'
 }).round(2)
 weekday_stats.index = ['Weekday', 'Weekend']
-print("\n📊 Weekday vs Weekend Comparison:")
 print(weekday_stats)
 
 fig, axes = plt.subplots(2, 2, figsize=(16, 12))
@@ -860,7 +845,7 @@ ax4.tick_params(axis='x', rotation=45)
 plt.tight_layout()
 plt.savefig('air_quality_analysis_output/weekday_patterns.png', dpi=150, bbox_inches='tight')
 plt.show()
-print("✅ Saved: weekday_patterns.png")
+
 
 # ============================================================================
 # 11. SUMMARY REPORT
@@ -870,33 +855,29 @@ print("\n" + "="*80)
 print("11. ANALYSIS SUMMARY REPORT")
 print("="*80)
 
-print("""
-╔══════════════════════════════════════════════════════════════════════════════╗
-║                         AIR QUALITY ANALYSIS SUMMARY                         ║
-╚══════════════════════════════════════════════════════════════════════════════╝
-""")
+
 
 print(f"""
-📌 DATASET OVERVIEW:
+ DATASET OVERVIEW:
    • Time Period: {df['Datetime'].min().date()} to {df['Datetime'].max().date()}
    • Total Records: {len(df):,}
    • Cities Analyzed: {', '.join(df['City'].unique())}
    • Average AQI (Overall): {df['AQI'].mean():.1f} - {df['AQI_Bucket'].mode()[0]}
 
-📊 SEASONAL PATTERNS:
+ SEASONAL PATTERNS:
    • Worst Season: Winter (Dec-Feb) - Avg AQI: {df[df['Season']=='Winter']['AQI'].mean():.1f}
    • Best Season: Monsoon (Jun-Sep) - Avg AQI: {df[df['Season']=='Monsoon']['AQI'].mean():.1f}
    • Peak Pollution Month: November - Avg AQI: {df[df['Month']==11]['AQI'].mean():.1f}
    • Cleanest Month: August - Avg AQI: {df[df['Month']==8]['AQI'].mean():.1f}
 
-🏙️ CITY RANKING (Average AQI):
+CITY RANKING (Average AQI):
 """)
 
 for i, (city, aqi) in enumerate(city_avg_aqi['mean'].items(), 1):
     print(f"   {i}. {city}: {aqi:.1f}")
 
 print(f"""
-📈 YEARLY TRENDS:
+YEARLY TRENDS:
    • 2015 Avg AQI: {df[df['Year']==2015]['AQI'].mean():.1f}
    • 2016 Avg AQI: {df[df['Year']==2016]['AQI'].mean():.1f}
    • 2017 Avg AQI: {df[df['Year']==2017]['AQI'].mean():.1f}
@@ -904,17 +885,17 @@ print(f"""
    • 2019 Avg AQI: {df[df['Year']==2019]['AQI'].mean():.1f}
    • 2020 Avg AQI: {df[df['Year']==2020]['AQI'].mean():.1f} (COVID Year)
 
-🎉 FESTIVAL IMPACT:
+FESTIVAL IMPACT:
    • Diwali: +{festival_df[festival_df['Festival']=='Diwali']['Percent_Increase'].values[0]:.1f}% AQI increase
    • Holi: +{festival_df[festival_df['Festival']=='Holi']['Percent_Increase'].values[0]:.1f}% AQI increase
    • Dussehra: +{festival_df[festival_df['Festival']=='Dussehra']['Percent_Increase'].values[0]:.1f}% AQI increase
 
-🦠 LOCKDOWN EFFECT (COVID-19):
+ LOCKDOWN EFFECT (COVID-19):
    • Overall AQI Reduction: {lockdown_df[lockdown_df['Metric']=='AQI']['Change_%'].values[0]:.1f}%
    • PM2.5 Reduction: {lockdown_df[lockdown_df['Metric']=='PM2.5']['Change_%'].values[0]:.1f}%
    • NO2 Reduction: {lockdown_df[lockdown_df['Metric']=='NO2']['Change_%'].values[0]:.1f}%
 
-🔍 KEY FINDINGS:
+KEY FINDINGS:
    1. Particulate Matter (PM2.5/PM10) are the primary pollutants driving poor AQI
    2. Winter months show 2-3x higher pollution than monsoon months
    3. Delhi is consistently the most polluted city; Bangalore the cleanest
@@ -939,5 +920,6 @@ with open('air_quality_analysis_output/analysis_summary.txt', 'w') as f:
     f.write(f"  AQI Reduction: {lockdown_df[lockdown_df['Metric']=='AQI']['Change_%'].values[0]:.1f}%\n")
     f.write(f"  PM2.5 Reduction: {lockdown_df[lockdown_df['Metric']=='PM2.5']['Change_%'].values[0]:.1f}%\n")
 
-print("\n✅ Analysis complete! All visualizations saved to 'air_quality_analysis_output/' folder")
+print("\n Analysis complete! All visualizations saved to 'air_quality_analysis_output/' folder")
 print("="*80)
+
